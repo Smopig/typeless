@@ -30,7 +30,7 @@ pub fn run() {
         ))
         .manage(shared_state.clone())
         .setup(move |app| {
-            // Build system tray
+            // Build system tray (registered internally by Tauri's resource manager)
             tray::menu::setup(app.handle())?;
 
             // Load settings and register hotkey

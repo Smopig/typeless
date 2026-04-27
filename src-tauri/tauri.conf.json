@@ -22,12 +22,6 @@
         "center": true
       }
     ],
-    "trayIcon": {
-      "iconPath": "icons/tray-idle.png",
-      "iconAsTemplate": true,
-      "menuOnLeftClick": false,
-      "tooltip": "Typeless"
-    },
     "macOSPrivateApi": false
   },
   "bundle": {
