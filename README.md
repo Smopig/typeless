@@ -1,5 +1,7 @@
 # Typeless
 
+[繁體中文](README.zh.md) | English
+
 A cross-platform AI voice input app. Hold a hotkey, speak, release — your words appear in any app.
 
 Built with Tauri v2 (Rust + React), powered by Groq Whisper for fast speech-to-text.
