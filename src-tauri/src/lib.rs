@@ -40,7 +40,7 @@ pub fn run() {
 
             // Hide from dock on macOS (tray-only app)
             #[cfg(target_os = "macos")]
-            app.set_activation_policy(tauri::ActivationPolicy::Accessory)?;
+            app.set_activation_policy(tauri::ActivationPolicy::Accessory);
 
             Ok(())
         })
