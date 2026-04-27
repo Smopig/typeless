@@ -81,7 +81,7 @@ pub fn register(
                     let app = app.clone();
                     let state = state.clone();
 
-                    tokio::spawn(async move {
+                    tauri::async_runtime::spawn(async move {
                         if let Err(e) = run_pipeline(app.clone(), state.clone(), capturer).await {
                             log::error!("Pipeline error: {}", e);
                             let mut s = state.lock();
@@ -105,8 +105,11 @@ async fn run_pipeline(
     _state: SharedState,
     capturer: AudioCapturer,
 ) -> anyhow::Result<()> {
-    // Stop recording → get PCM samples
-    let (samples, native_rate) = capturer.stop()?;
+    // Stop recording on a blocking thread (cpal is not async-safe)
+    let (samples, native_rate) = tauri::async_runtime::spawn_blocking(move || capturer.stop())
+        .await
+        .map_err(|e| anyhow::anyhow!("Join error: {}", e))??;
+
     if samples.is_empty() {
         anyhow::bail!("No audio recorded");
     }
