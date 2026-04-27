@@ -14,7 +14,7 @@ pub fn setup<R: Runtime>(app: &AppHandle<R>) -> anyhow::Result<TrayIcon<R>> {
     let tray = TrayIconBuilder::with_id("main")
         .tooltip("Typeless — idle")
         .menu(&menu)
-        .show_menu_on_left_click(false)
+        .show_menu_on_left_click(true)
         .on_menu_event(|app, event| match event.id().as_ref() {
             "open" => {
                 if let Some(win) = app.get_webview_window("main") {
