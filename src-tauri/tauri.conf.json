@@ -1,0 +1,64 @@
+{
+  "productName": "Typeless",
+  "version": "0.1.0",
+  "identifier": "com.typeless.app",
+  "build": {
+    "frontendDist": "../dist",
+    "devUrl": "http://localhost:1420",
+    "beforeDevCommand": "npm run dev",
+    "beforeBuildCommand": "npm run build"
+  },
+  "app": {
+    "withGlobalTauri": false,
+    "windows": [
+      {
+        "label": "main",
+        "title": "Typeless",
+        "width": 480,
+        "height": 640,
+        "visible": false,
+        "decorations": true,
+        "resizable": false,
+        "center": true
+      }
+    ],
+    "trayIcon": {
+      "iconPath": "icons/tray-idle.png",
+      "iconAsTemplate": true,
+      "menuOnLeftClick": false,
+      "tooltip": "Typeless"
+    },
+    "macOSPrivateApi": false
+  },
+  "bundle": {
+    "active": true,
+    "targets": "all",
+    "icon": [
+      "icons/icon.icns",
+      "icons/icon.ico",
+      "icons/icon.png"
+    ],
+    "copyright": "",
+    "category": "Utility",
+    "shortDescription": "AI voice dictation for any app",
+    "longDescription": "Hold a hotkey, speak, and have your words typed anywhere on your computer. Powered by Groq Whisper.",
+    "macOS": {
+      "minimumSystemVersion": "12.0",
+      "infoPlist": "Info.plist",
+      "entitlements": "entitlements.mac.plist",
+      "signingIdentity": "-"
+    },
+    "windows": {
+      "nsis": {
+        "installMode": "currentUser"
+      }
+    }
+  },
+  "plugins": {
+    "global-shortcut": {},
+    "clipboard-manager": {},
+    "store": {},
+    "notification": {},
+    "autostart": {}
+  }
+}

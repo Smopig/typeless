@@ -1,0 +1,31 @@
+{
+  "$schema": "../node_modules/@tauri-apps/cli/schema/acl/capability.schema.json",
+  "identifier": "default",
+  "description": "default capability",
+  "windows": ["main"],
+  "permissions": [
+    "core:default",
+    "global-shortcut:allow-is-registered",
+    "global-shortcut:allow-register",
+    "global-shortcut:allow-unregister",
+    "global-shortcut:allow-register-all",
+    "global-shortcut:allow-unregister-all",
+    "clipboard-manager:allow-read-text",
+    "clipboard-manager:allow-write-text",
+    "store:allow-get",
+    "store:allow-set",
+    "store:allow-save",
+    "store:allow-load",
+    "store:allow-delete",
+    "store:allow-clear",
+    "notification:default",
+    "autostart:allow-enable",
+    "autostart:allow-disable",
+    "autostart:allow-is-enabled",
+    "core:window:allow-show",
+    "core:window:allow-hide",
+    "core:window:allow-close",
+    "core:app:allow-version",
+    "core:app:allow-name"
+  ]
+}
