@@ -54,11 +54,5 @@
       }
     }
   },
-  "plugins": {
-    "global-shortcut": {},
-    "clipboard-manager": {},
-    "store": {},
-    "notification": {},
-    "autostart": {}
-  }
+  "plugins": {}
 }

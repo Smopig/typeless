@@ -5,6 +5,7 @@ use tauri::{AppHandle, Emitter};
 use tauri_plugin_global_shortcut::{GlobalShortcutExt, ShortcutState};
 
 use crate::audio::{capturer::AudioCapturer, capturer::resample, encoder::pcm_to_wav_bytes};
+use crate::commands::history::{append_entry, HistoryEntry};
 use crate::settings::store::load as load_settings;
 use crate::state::{AppStatus, SharedState};
 
@@ -143,11 +144,13 @@ async fn run_pipeline(
     // Inject text
     crate::injection::clipboard::inject_via_clipboard(&app, text_to_inject).await?;
 
-    // Emit transcript for history
+    // Persist to history store and emit to frontend
     let timestamp = std::time::SystemTime::now()
         .duration_since(std::time::UNIX_EPOCH)
         .unwrap_or_default()
         .as_millis() as u64;
+
+    append_entry(&app, HistoryEntry { raw: raw.clone(), polished: polished.clone(), timestamp });
 
     let _ = app.emit("transcript-ready", TranscriptPayload {
         raw,
