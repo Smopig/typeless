@@ -30,8 +30,9 @@ function formatHotkey(e: KeyboardEvent): string | null {
   if (["Control", "Meta", "Alt", "Shift"].includes(key)) return null;
 
   const mapped = KEY_MAP[key] ?? (key.length === 1 ? key.toUpperCase() : key);
-  if (mods.length === 0) return null;
-  return [...mods, mapped].join("+");
+  const isFKey = /^F\d{1,2}$/.test(mapped);
+  if (mods.length === 0 && !isFKey) return null;
+  return mods.length > 0 ? [...mods, mapped].join("+") : mapped;
 }
 
 export function HotkeyPicker({ value, onChange }: Props) {
@@ -70,7 +71,7 @@ export function HotkeyPicker({ value, onChange }: Props) {
         </span>
       </button>
       <p className="text-xs text-gray-400">
-        Requires at least one modifier key (Cmd/Ctrl, Alt, Shift)
+        Use a modifier combo (Cmd/Ctrl/Alt/Shift + key) or a single function key (F1–F12)
       </p>
     </div>
   );

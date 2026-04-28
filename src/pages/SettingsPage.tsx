@@ -60,7 +60,7 @@ export function SettingsPage() {
 
       {/* Body */}
       <div className="flex-1 overflow-y-auto px-5 py-4">
-        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-5">
+        <form id="settings-form" onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-5">
 
           {!accessibilityGranted && <AccessibilityBanner />}
 
@@ -185,16 +185,20 @@ export function SettingsPage() {
             </label>
           </section>
 
-          {/* Save button */}
-          <button
-            type="submit"
-            disabled={saving}
-            className="flex items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-blue-700 disabled:opacity-60"
-          >
-            <Save size={15} />
-            {saved ? "Saved!" : saving ? "Saving…" : "Save Settings"}
-          </button>
         </form>
+      </div>
+
+      {/* Sticky footer — always visible */}
+      <div className="border-t border-gray-200 bg-white px-5 py-3">
+        <button
+          type="submit"
+          form="settings-form"
+          disabled={saving}
+          className="flex w-full items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-blue-700 disabled:opacity-60"
+        >
+          <Save size={15} />
+          {saved ? "Saved!" : saving ? "Saving…" : "Save Settings"}
+        </button>
       </div>
     </div>
   );

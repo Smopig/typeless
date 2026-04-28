@@ -36,13 +36,13 @@ function HistoryCard({ entry }: { entry: HistoryEntry }) {
 }
 
 export function HistoryPage() {
-  const { history, addHistory } = useAppStore();
+  const { history } = useAppStore();
 
   useEffect(() => {
     getHistory().then((entries) => {
-      entries.forEach(addHistory);
+      useAppStore.setState({ history: entries });
     });
-  }, [addHistory]);
+  }, []);
 
   const handleClear = async () => {
     await clearHistory();
