@@ -40,3 +40,25 @@ pub fn show_settings_window<R: Runtime>(app: &AppHandle<R>) {
         let _ = win.set_focus();
     }
 }
+
+/// Update tray icon and tooltip to reflect current pipeline status.
+pub fn set_status_icon<R: Runtime>(app: &AppHandle<R>, status: &str) {
+    let icon_bytes: &[u8] = match status {
+        "recording" => include_bytes!("../../icons/tray-recording.png"),
+        "transcribing" | "polishing" => include_bytes!("../../icons/tray-processing.png"),
+        _ => include_bytes!("../../icons/tray-idle.png"),
+    };
+    let tooltip = match status {
+        "recording" => "Typeless — recording…",
+        "transcribing" => "Typeless — transcribing…",
+        "polishing" => "Typeless — polishing…",
+        _ => "Typeless — idle",
+    };
+    if let Some(tray) = app.tray_by_id("main") {
+        if let Ok(icon) = tauri::image::Image::from_bytes(icon_bytes) {
+            let _ = tray.set_icon(Some(icon));
+        }
+        let _ = tray.set_tooltip(Some(tooltip));
+    }
+}
+

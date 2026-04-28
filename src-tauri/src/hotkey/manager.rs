@@ -52,6 +52,7 @@ pub fn register(
                     drop(s);
 
                     let _ = app.emit("status-changed", StatusPayload { status: "recording".into() });
+                    crate::tray::menu::set_status_icon(&app, "recording");
 
                     match AudioCapturer::start() {
                         Ok(capturer) => {
@@ -77,6 +78,7 @@ pub fn register(
                         s.status = AppStatus::Transcribing;
                     }
                     let _ = app.emit("status-changed", StatusPayload { status: "transcribing".into() });
+                    crate::tray::menu::set_status_icon(&app, "transcribing");
 
                     let app = app.clone();
                     let state = state.clone();
@@ -90,7 +92,9 @@ pub fn register(
                         }
                         let mut s = state.lock();
                         s.status = AppStatus::Idle;
+                        drop(s);
                         let _ = app.emit("status-changed", StatusPayload { status: "idle".into() });
+                        crate::tray::menu::set_status_icon(&app, "idle");
                     });
                 }
             }
@@ -131,6 +135,7 @@ async fn run_pipeline(
     // Optional LLM polish
     let polished = if settings.polish_enabled && !settings.llm_api_key.is_empty() {
         let _ = app.emit("status-changed", StatusPayload { status: "polishing".into() });
+        crate::tray::menu::set_status_icon(&app, "polishing");
         match crate::llm::polisher::polish(&raw, &settings.llm_api_key, &settings.llm_base_url, &settings.llm_model).await {
             Ok(p) => Some(p),
             Err(e) => {
