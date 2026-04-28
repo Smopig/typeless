@@ -9,11 +9,22 @@ pub async fn transcribe(
         .file_name("audio.wav")
         .mime_str("audio/wav")?;
 
-    // Prompt guides Whisper to use correct punctuation for the target language
-    let prompt = match language_hint {
-        "zh" => "以下是普通話或粵語語音，請加上中文標點符號（，。！？；：「」）。",
-        "en" => "Please use proper English punctuation including commas, periods, and question marks.",
-        _ => "Please include proper punctuation marks.",
+    // zh-TW: Whisper only knows "zh" but we nudge it toward Traditional via prompt
+    let (whisper_lang, prompt) = match language_hint {
+        "zh-TW" => (
+            Some("zh"),
+            "以下是繁體中文語音（台灣用語）。請務必以繁體中文輸出，不得使用簡體字。\
+             正確使用全形標點符號（，。！？；：「」）。",
+        ),
+        "zh" => (
+            Some("zh"),
+            "以下是普通話或粵語語音，請加上中文標點符號（，。！？；：「」）。",
+        ),
+        "en" => (
+            Some("en"),
+            "Please use proper English punctuation including commas, periods, and question marks.",
+        ),
+        _ => (None, "Please include proper punctuation marks."),
     };
 
     let mut form = reqwest::multipart::Form::new()
@@ -22,9 +33,8 @@ pub async fn transcribe(
         .text("response_format", "text")
         .text("prompt", prompt);
 
-    // "auto" means omit the language field → Whisper auto-detects
-    if language_hint != "auto" {
-        form = form.text("language", language_hint.to_string());
+    if let Some(lang) = whisper_lang {
+        form = form.text("language", lang);
     }
 
     let text = client

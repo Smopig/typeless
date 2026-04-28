@@ -11,9 +11,10 @@ import { AccessibilityBanner } from "../components/AccessibilityBanner";
 import { StatusIndicator } from "../components/StatusIndicator";
 
 const LANGUAGE_OPTIONS = [
-  { value: "zh", label: "Chinese / 中文 (recommended for mixed)" },
+  { value: "zh-TW", label: "繁體中文 Traditional Chinese (台灣／香港)" },
+  { value: "zh", label: "简体中文 Simplified Chinese / 普通話" },
   { value: "en", label: "English" },
-  { value: "auto", label: "Auto-detect" },
+  { value: "auto", label: "Auto-detect (may output Simplified Chinese)" },
 ];
 
 export function SettingsPage() {

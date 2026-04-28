@@ -136,7 +136,7 @@ async fn run_pipeline(
     let polished = if settings.polish_enabled && !settings.llm_api_key.is_empty() {
         let _ = app.emit("status-changed", StatusPayload { status: "polishing".into() });
         crate::tray::menu::set_status_icon(&app, "polishing");
-        match crate::llm::polisher::polish(&raw, &settings.llm_api_key, &settings.llm_base_url, &settings.llm_model).await {
+        match crate::llm::polisher::polish(&raw, &settings.llm_api_key, &settings.llm_base_url, &settings.llm_model, &settings.language_hint).await {
             Ok(p) => Some(p),
             Err(e) => {
                 log::warn!("LLM polish failed, using raw transcript: {}", e);

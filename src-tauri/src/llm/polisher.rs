@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-use super::prompts::POLISH_SYSTEM_PROMPT;
+use super::prompts::{POLISH_SYSTEM_PROMPT, POLISH_SYSTEM_PROMPT_ZH_TW};
 
 #[derive(Serialize)]
 struct ChatRequest<'a> {
@@ -36,16 +36,23 @@ pub async fn polish(
     api_key: &str,
     base_url: &str,
     model: &str,
+    language_hint: &str,
 ) -> anyhow::Result<String> {
     let client = reqwest::Client::new();
     let url = format!("{}/chat/completions", base_url.trim_end_matches('/'));
+
+    let system_prompt = if language_hint == "zh-TW" {
+        POLISH_SYSTEM_PROMPT_ZH_TW
+    } else {
+        POLISH_SYSTEM_PROMPT
+    };
 
     let request = ChatRequest {
         model,
         messages: vec![
             Message {
                 role: "system",
-                content: POLISH_SYSTEM_PROMPT,
+                content: system_prompt,
             },
             Message {
                 role: "user",
