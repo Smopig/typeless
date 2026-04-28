@@ -24,6 +24,8 @@ const isMac = navigator.platform.toUpperCase().includes("MAC");
 
 const DISPLAY_MAP: Record<string, string> = {
   CommandOrControl: isMac ? "⌘" : "Ctrl",
+  Command: "⌘",
+  Control: isMac ? "Ctrl+" : "Ctrl",
   Alt: isMac ? "⌥" : "Alt",
   Shift: isMac ? "⇧" : "Shift+",
   Period: ".",
@@ -49,7 +51,9 @@ export function displayHotkey(stored: string): string {
 
 function formatHotkey(e: KeyboardEvent): string | null {
   const mods: string[] = [];
-  if (e.ctrlKey || e.metaKey) mods.push("CommandOrControl");
+  // On Mac, distinguish Ctrl (^) from Cmd (⌘) so both can be used as hotkeys
+  if (e.metaKey) mods.push("Command");
+  if (e.ctrlKey) mods.push("Control");
   if (e.altKey) mods.push("Alt");
   if (e.shiftKey) mods.push("Shift");
 
@@ -113,7 +117,9 @@ export function HotkeyPicker({ value, onChange }: Props) {
         </span>
       </button>
       <p className="text-xs text-gray-400">
-        Examples: {isMac ? "⌘⇧." : "Ctrl+Shift+."} · F5 · F6 · {isMac ? "⌥F" : "Alt+F"}
+        {isMac
+          ? "Examples: Ctrl+Q · ⌘⇧. · F5 — Ctrl and ⌘ are treated separately"
+          : "Examples: Ctrl+Q · Ctrl+Shift+. · F5"}
         &nbsp;— must include at least one non-modifier key
       </p>
     </div>
