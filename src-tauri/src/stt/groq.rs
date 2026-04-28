@@ -9,10 +9,18 @@ pub async fn transcribe(
         .file_name("audio.wav")
         .mime_str("audio/wav")?;
 
+    // Prompt guides Whisper to use correct punctuation for the target language
+    let prompt = match language_hint {
+        "zh" => "以下是普通話或粵語語音，請加上中文標點符號（，。！？；：「」）。",
+        "en" => "Please use proper English punctuation including commas, periods, and question marks.",
+        _ => "Please include proper punctuation marks.",
+    };
+
     let mut form = reqwest::multipart::Form::new()
         .part("file", part)
         .text("model", "whisper-large-v3-turbo")
-        .text("response_format", "text");
+        .text("response_format", "text")
+        .text("prompt", prompt);
 
     // "auto" means omit the language field → Whisper auto-detects
     if language_hint != "auto" {

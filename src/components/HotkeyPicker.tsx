@@ -20,6 +20,34 @@ const KEY_MAP: Record<string, string> = {
   "=": "Equal",
 };
 
+// Reverse map: stored token → display symbol
+const isMac = navigator.platform.toUpperCase().includes("MAC");
+
+const DISPLAY_MAP: Record<string, string> = {
+  CommandOrControl: isMac ? "⌘" : "Ctrl",
+  Alt: isMac ? "⌥" : "Alt",
+  Shift: isMac ? "⇧" : "Shift",
+  Period: ".",
+  Comma: ",",
+  Slash: "/",
+  Semicolon: ";",
+  Quote: "'",
+  BracketLeft: "[",
+  BracketRight: "]",
+  Backslash: "\\",
+  Minus: "-",
+  Equal: "=",
+  Space: "Space",
+};
+
+function displayHotkey(stored: string): string {
+  if (!stored) return "";
+  return stored
+    .split("+")
+    .map((tok) => DISPLAY_MAP[tok] ?? tok)
+    .join(isMac ? "" : "+");
+}
+
 function formatHotkey(e: KeyboardEvent): string | null {
   const mods: string[] = [];
   if (e.ctrlKey || e.metaKey) mods.push("CommandOrControl");
@@ -67,7 +95,11 @@ export function HotkeyPicker({ value, onChange }: Props) {
       >
         <Keyboard size={14} className="text-gray-400" />
         <span className={capturing ? "text-blue-600" : "text-gray-700"}>
-          {capturing ? "Press hotkey combination…" : (value || "Click to set")}
+          {capturing
+            ? "Press hotkey combination…"
+            : value
+            ? displayHotkey(value)
+            : "Click to set"}
         </span>
       </button>
       <p className="text-xs text-gray-400">

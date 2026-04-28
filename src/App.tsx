@@ -30,11 +30,15 @@ export default function App() {
     };
   }, [setStatus, addHistory, setError]);
 
-  // Check accessibility permission on mount (macOS only)
+  // Check accessibility permission on mount and whenever window regains focus
   useEffect(() => {
-    checkAccessibilityPermission()
-      .then(setAccessibility)
-      .catch(() => setAccessibility(true));
+    const check = () =>
+      checkAccessibilityPermission()
+        .then(setAccessibility)
+        .catch(() => setAccessibility(true));
+    check();
+    window.addEventListener("focus", check);
+    return () => window.removeEventListener("focus", check);
   }, [setAccessibility]);
 
   const errorMessage = useAppStore((s) => s.errorMessage);
