@@ -11,7 +11,7 @@ mod tray;
 use state::{AppState, SharedState};
 use std::sync::Arc;
 use parking_lot::Mutex;
-use tauri::WindowEvent;
+use tauri::{Manager, WindowEvent};
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
@@ -41,6 +41,14 @@ pub fn run() {
             // Hide from dock on macOS (tray-only app)
             #[cfg(target_os = "macos")]
             app.set_activation_policy(tauri::ActivationPolicy::Accessory);
+
+            // Open settings window on first run (no API key configured yet)
+            if settings.groq_api_key.is_empty() {
+                if let Some(win) = app.handle().get_webview_window("main") {
+                    let _ = win.show();
+                    let _ = win.set_focus();
+                }
+            }
 
             Ok(())
         })
