@@ -12,9 +12,7 @@ pub fn setup<R: Runtime>(app: &AppHandle<R>) -> anyhow::Result<TrayIcon<R>> {
     let menu = Menu::with_items(app, &[&open, &separator, &quit])?;
 
     let icon = tauri::image::Image::from_bytes(include_bytes!("../../icons/tray-idle.png"))
-        .unwrap_or_else(|_| app.default_window_icon().cloned().unwrap_or_else(|| {
-            tauri::image::Image::new(vec![0u8; 4 * 22 * 22], 22, 22)
-        }));
+        .expect("tray-idle.png embedded at compile time");
 
     let tray = TrayIconBuilder::with_id("main")
         .icon(icon)
